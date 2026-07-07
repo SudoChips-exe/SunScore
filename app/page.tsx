@@ -1,11 +1,9 @@
 import Link from "next/link";
+import { Naira } from "@/components/Naira";
 
 export default function LandingPage() {
   return (
     <main className="relative min-h-screen w-full bg-brand-stone-50 overflow-x-hidden">
-      {/* Grain Overlay for Editorial Texture */}
-      <div className="fixed inset-0 z-50 pointer-events-none opacity-[0.03] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
-      
       {/* Background Architectural Elements */}
       <div className="absolute top-0 right-0 w-1/3 h-full bg-brand-gold-50/50 -skew-x-12 translate-x-20" />
       <div className="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-brand-gold-100/40 blur-3xl" />
@@ -25,11 +23,11 @@ export default function LandingPage() {
             
             <h1 className="font-display text-6xl md:text-8xl lg:text-9xl leading-[0.9] tracking-tighter text-brand-stone-900 mb-8">
               The <span className="italic text-brand-gold-600">end</span> of the <br />
-              diesel era.
+              fuel &amp; diesel era.
             </h1>
-            
+
             <p className="text-xl md:text-2xl text-brand-stone-600 max-w-2xl leading-relaxed mb-12 font-light">
-              You&apos;ve been financing a solar system for years—you just paid the diesel companies instead. <span className="font-medium text-brand-stone-900">Stop the leak.</span>
+              You&apos;ve been financing a solar system for years—you just paid the fuel and diesel companies instead. <span className="font-medium text-brand-stone-900">Stop the leak.</span>
             </p>
 
             <div className="flex flex-col sm:flex-row gap-6 items-start">
@@ -71,7 +69,7 @@ export default function LandingPage() {
                 <div className="group cursor-default">
                   <div className="flex justify-between mb-2">
                     <span className="text-sm font-medium text-brand-stone-400 uppercase tracking-widest">Diesel Burden</span>
-                    <span className="text-sm font-bold text-brand-stone-900">₦120,000/mo</span>
+                    <span className="text-sm font-bold text-brand-stone-900"><Naira />120,000/mo</span>
                   </div>
                   <div className="h-3 w-full bg-brand-stone-100 rounded-full overflow-hidden">
                     <div className="h-full w-full bg-brand-stone-300 group-hover:bg-brand-stone-400 transition-colors" />
@@ -81,7 +79,7 @@ export default function LandingPage() {
                 <div className="group cursor-default">
                   <div className="flex justify-between mb-2">
                     <span className="text-sm font-medium text-brand-green-600 uppercase tracking-widest">Solar Freedom</span>
-                    <span className="text-sm font-bold text-brand-green-700">₦85,000/mo</span>
+                    <span className="text-sm font-bold text-brand-green-700"><Naira />85,000/mo</span>
                   </div>
                   <div className="h-3 w-full bg-brand-green-50 rounded-full overflow-hidden">
                     <div className="h-full w-[70%] bg-brand-green-500 group-hover:bg-brand-green-600 transition-colors" />
@@ -92,7 +90,7 @@ export default function LandingPage() {
               <div className="mt-12 pt-8 border-t border-brand-stone-100">
                 <div className="flex items-baseline gap-2">
                   <span className="text-sm text-brand-stone-500">Monthly Profit:</span>
-                  <span className="text-3xl font-display font-bold text-brand-green-600">₦35,000</span>
+                  <span className="text-3xl font-display font-bold text-brand-green-600"><Naira />35,000</span>
                 </div>
                 <p className="text-xs text-brand-stone-400 mt-2 italic">
                   *Based on average Nigerian household spend patterns

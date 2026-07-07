@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { calculate } from "@/lib/calculator";
 import { saveLead } from "@/lib/firebase";
 import { useSunScore } from "@/context/SunScoreContext";
+import { Naira } from "@/components/Naira";
+import { AmbientBackground } from "@/components/AmbientBackground";
 import type { CalculatorInput } from "@/types";
 
 interface FieldSchema {
@@ -15,19 +17,21 @@ interface FieldSchema {
   step?: number;
   integerOnly?: boolean;
   defaultValue?: number;
+  isCurrency?: boolean;
 }
 
 const FIELDS: FieldSchema[] = [
-  { name: "dieselSpend", label: "Monthly Fuel/Diesel Spend (₦)", min: 1, max: 10_000_000 },
+  { name: "dieselSpend", label: "Monthly Fuel/Diesel Spend", min: 1, max: 10_000_000, isCurrency: true },
   { name: "runHours", label: "Daily Run Hours", min: 0.5, max: 24, step: 0.5 },
   { name: "householdSize", label: "Household Size (people)", min: 1, max: 100, integerOnly: true },
   { name: "consistencyMonths", label: "Consistency Months", min: 1, max: 120, integerOnly: true },
   {
     name: "dieselPricePerLitre",
-    label: "Fuel/Diesel Price per Litre (₦)",
+    label: "Fuel/Diesel Price per Litre",
     min: 100,
     max: 10_000,
     defaultValue: 1_600,
+    isCurrency: true,
   },
 ];
 
@@ -80,20 +84,21 @@ export function InputForm() {
 
     const input = parsed as unknown as CalculatorInput;
     const output = calculate(input);
-    setResult(input, output.spendTier);
+    setResult(input, output);
     saveLead(input, output.spendTier);
     router.push("/results");
   }
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-xl flex-col items-center justify-center px-6 py-12">
+    <div className="relative mx-auto flex min-h-screen max-w-xl flex-col items-center justify-center overflow-hidden px-6 py-12">
+      <AmbientBackground />
       <div className="w-full rounded-3xl border border-brand-stone-200 bg-white p-8 shadow-sm md:p-12">
         <div className="mb-8 text-center">
           <h2 className="font-display text-3xl font-medium text-brand-stone-900">
-            Calculate Your Savings
+            Do the Math on the Leak
           </h2>
           <p className="mt-2 text-brand-stone-500">
-            Enter your current fuel and diesel usage to see your solar potential.
+            Three minutes of typing against years of diesel receipts. Let&apos;s see the damage.
           </p>
         </div>
 
@@ -103,6 +108,13 @@ export function InputForm() {
               <div key={field.name} className={`flex flex-col gap-2 ${field.name === "dieselSpend" ? "sm:col-span-2" : ""}`}>
                 <label htmlFor={field.name} className="text-sm font-medium text-brand-stone-700">
                   {field.label}
+                  {field.isCurrency && (
+                    <>
+                      {" ("}
+                      <Naira />
+                      {")"}
+                    </>
+                  )}
                 </label>
                 <input
                   id={field.name}
@@ -128,7 +140,7 @@ export function InputForm() {
             type="submit"
             className="group relative mt-4 inline-flex items-center justify-center overflow-hidden rounded-full bg-brand-gold-500 px-8 py-4 font-semibold text-brand-stone-900 transition-all hover:bg-brand-gold-600 hover:shadow-lg active:scale-95"
           >
-            <span className="relative z-10">See My Savings</span>
+            <span className="relative z-10">Reveal My Savings</span>
             <div className="absolute inset-0 -z-10 translate-y-full transition-transform group-hover:translate-y-0 bg-brand-gold-400" />
           </button>
         </form>

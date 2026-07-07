@@ -23,6 +23,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className={`${inter.variable} ${playfair.variable} font-sans bg-brand-stone-50 text-brand-stone-900 antialiased`}>
+        {/* Grain overlay — the one texture that ties every screen back to the landing page's editorial feel */}
+        <div className="pointer-events-none fixed inset-0 z-50 opacity-[0.03] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
         <SunScoreProvider>{children}</SunScoreProvider>
       </body>
     </html>

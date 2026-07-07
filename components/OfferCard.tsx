@@ -1,30 +1,56 @@
 import type { Offer } from "@/types";
+import { Naira } from "@/components/Naira";
 
 interface OfferCardProps {
   offer: Offer;
   showBadge: boolean;
 }
 
+// Each provider gets a distinct accent so the list reads as real matching,
+// not three identical cards with different names swapped in.
+const PROVIDER_ACCENT: Record<Offer["provider"], { bar: string; chip: string; text: string }> = {
+  Lumos: { bar: "bg-brand-gold-500", chip: "bg-brand-gold-100", text: "text-brand-gold-700" },
+  Arnergy: { bar: "bg-sky-500", chip: "bg-sky-100", text: "text-sky-700" },
+  "d.light": { bar: "bg-rose-500", chip: "bg-rose-100", text: "text-rose-700" },
+};
+
 export function OfferCard({ offer, showBadge }: OfferCardProps) {
+  const accent = PROVIDER_ACCENT[offer.provider];
+  const contactHref = `mailto:hello@sunscore.ng?subject=${encodeURIComponent(
+    `Interested in the ${offer.provider} plan`
+  )}&body=${encodeURIComponent(
+    `Hi, I'd like to lock in the ${offer.provider} plan at ₦${offer.monthlyPayment.toLocaleString()}/mo (${offer.ownershipMonths} months to ownership).`
+  )}`;
+
   return (
-    <div className={`group relative flex flex-col gap-6 rounded-3xl border p-8 transition-all hover:shadow-md ${
-      showBadge ? "border-brand-green-200 bg-brand-green-50/30" : "border-brand-stone-200 bg-white"
-    }`}>
+    <div
+      className={`group relative flex flex-col gap-6 overflow-hidden rounded-3xl border p-8 pl-9 transition-all hover:shadow-md ${
+        showBadge ? "border-brand-green-200 bg-brand-green-50/30" : "border-brand-stone-200 bg-white"
+      }`}
+    >
+      <div className={`absolute inset-y-0 left-0 w-1.5 ${accent.bar}`} aria-hidden />
+
       {showBadge && (
-        <div className="absolute -top-3 left-6 rounded-full bg-brand-green-600 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-white shadow-sm">
+        <div className="inline-flex w-fit items-center gap-1 rounded-full bg-brand-green-600 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-white shadow-sm">
           Pre-Qualified
         </div>
       )}
-      
+
       <div className="flex items-start justify-between gap-4">
         <div>
           <p className="text-xs font-semibold uppercase tracking-wider text-brand-stone-400">Provider</p>
-          <p className="text-2xl font-display font-medium text-brand-stone-900">{offer.provider}</p>
+          <div className="flex items-center gap-2">
+            <span className={`flex h-6 w-6 items-center justify-center rounded-full text-[10px] font-bold ${accent.chip} ${accent.text}`}>
+              {offer.provider[0]}
+            </span>
+            <p className="text-2xl font-display font-medium text-brand-stone-900">{offer.provider}</p>
+          </div>
         </div>
         <div className="text-right">
           <p className="text-xs font-semibold uppercase tracking-wider text-brand-stone-400">Payment</p>
           <p className="text-2xl font-bold text-brand-stone-900">
-            ₦{offer.monthlyPayment.toLocaleString()}
+            <Naira />
+            {offer.monthlyPayment.toLocaleString()}
             <span className="text-sm font-normal text-brand-stone-500"> /mo</span>
           </p>
         </div>
@@ -41,13 +67,16 @@ export function OfferCard({ offer, showBadge }: OfferCardProps) {
         </div>
       </div>
 
-      <button className={`w-full rounded-full py-3 text-sm font-semibold transition-all ${
-        showBadge 
-          ? "bg-brand-green-600 text-white hover:bg-brand-green-700" 
-          : "bg-brand-stone-100 text-brand-stone-900 hover:bg-brand-stone-200"
-      }`}>
-        View Offer Details
-      </button>
+      <a
+        href={contactHref}
+        className={`w-full rounded-full py-3 text-center text-sm font-semibold transition-all ${
+          showBadge
+            ? "bg-brand-green-600 text-white hover:bg-brand-green-700"
+            : "bg-brand-stone-100 text-brand-stone-900 hover:bg-brand-stone-200"
+        }`}
+      >
+        Lock In This Plan
+      </a>
     </div>
   );
 }

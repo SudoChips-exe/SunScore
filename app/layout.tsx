@@ -17,6 +17,9 @@ export const metadata: Metadata = {
   title: "SunScore",
   description:
     "See how your existing fuel and diesel spend already covers an equivalent solar PAYGo plan.",
+  icons: {
+    icon: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

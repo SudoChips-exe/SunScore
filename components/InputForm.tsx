@@ -98,7 +98,7 @@ export function InputForm() {
             Do the Math on the Leak
           </h2>
           <p className="mt-2 text-brand-stone-500">
-            Three minutes of typing against years of diesel receipts. Let&apos;s see the damage.
+            Three minutes of typing against years of fuel and diesel receipts. Let&apos;s see the damage.
           </p>
         </div>
 

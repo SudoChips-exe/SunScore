@@ -55,7 +55,7 @@ export default function OffersPage() {
       <AmbientBackground />
       <div className="mb-12 text-center">
         <h1 className="font-display text-4xl font-medium text-brand-stone-900 md:text-5xl">
-          Your Ticket Out of the Diesel Era
+          Your Ticket Out of the Fuel &amp; Diesel Era
         </h1>
         <p className="mt-4 text-brand-stone-500">
           Based on your spending, these providers can get you switched over today.

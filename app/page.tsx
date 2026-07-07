@@ -68,7 +68,7 @@ export default function LandingPage() {
               <div className="space-y-8">
                 <div className="group cursor-default">
                   <div className="flex justify-between mb-2">
-                    <span className="text-sm font-medium text-brand-stone-400 uppercase tracking-widest">Diesel Burden</span>
+                    <span className="text-sm font-medium text-brand-stone-400 uppercase tracking-widest">Fuel &amp; Diesel Burden</span>
                     <span className="text-sm font-bold text-brand-stone-900"><Naira />120,000/mo</span>
                   </div>
                   <div className="h-3 w-full bg-brand-stone-100 rounded-full overflow-hidden">

@@ -72,7 +72,7 @@ export function ComparisonCard({ inputs, output }: ComparisonCardProps) {
             <JerryCanIcon />
           </div>
           <span className="text-sm font-medium text-brand-stone-500 uppercase tracking-wide">
-            The Diesel Life
+            The Fuel &amp; Diesel Life
           </span>
           <div className="mt-4 text-4xl font-bold text-brand-stone-900">
             <Naira />

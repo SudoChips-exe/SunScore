@@ -14,7 +14,8 @@ const REQUIRED_ENV_VARS = [
 function getFirebaseConfig() {
   const missing = REQUIRED_ENV_VARS.filter((key) => !process.env[key]);
   if (missing.length > 0) {
-    throw new Error(`Missing Firebase config: ${missing.join(", ")}`);
+    console.warn(`[SunScore] Missing Firebase config: ${missing.join(", ")}. Firebase services will be disabled.`);
+    return null;
   }
   return {
     apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY!,
@@ -26,15 +27,20 @@ function getFirebaseConfig() {
   };
 }
 
-const app = getApps().length === 0 ? initializeApp(getFirebaseConfig()) : getApps()[0];
+const config = getFirebaseConfig();
+const app = config ? (getApps().length === 0 ? initializeApp(config) : getApps()[0]) : null;
 
-export const db = getFirestore(app);
+export const db = app ? getFirestore(app) : null;
 
 /**
  * Writes a lead document to Firestore. Non-blocking: caller does not need
  * to await this. Errors are caught and logged; they never propagate.
  */
 export async function saveLead(input: CalculatorInput, spendTier: SpendTier): Promise<void> {
+  if (!db) {
+    console.warn("[SunScore] Firebase not initialized. Lead not saved.");
+    return;
+  }
   try {
     await addDoc(collection(db, "leads"), {
       dieselSpend: input.dieselSpend,

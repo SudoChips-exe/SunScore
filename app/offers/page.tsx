@@ -25,24 +25,58 @@ export default function OffersPage() {
 
   if (offers.length === 0) {
     return (
-      <main className="mx-auto flex max-w-md flex-col items-center gap-4 px-6 py-12 text-center">
-        <p>No matched offers currently available.</p>
-        <Link href="/calculate" className="underline">
-          Back to Calculator
-        </Link>
+      <main className="flex min-h-screen flex-col items-center justify-center px-6 py-24 text-center">
+        <div className="max-w-md rounded-3xl border border-brand-stone-200 bg-white p-8 shadow-sm">
+          <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-brand-stone-100 text-2xl">
+            🔌
+          </div>
+          <h2 className="font-display text-3xl font-medium text-brand-stone-900">
+            No Matches Found
+          </h2>
+          <p className="mt-4 text-brand-stone-500 leading-relaxed">
+            We couldn&apos;t find any solar plans that exactly match your current spending profile. 
+            Try adjusting your inputs to see other potential matches.
+          </p>
+          <Link 
+            href="/calculate" 
+            className="mt-8 inline-block rounded-full bg-brand-stone-900 px-8 py-3 font-semibold text-white transition hover:bg-brand-stone-800"
+          >
+            Adjust My Inputs
+          </Link>
+        </div>
       </main>
     );
   }
 
   return (
-    <main className="mx-auto flex max-w-md flex-col gap-4 px-6 py-12">
-      {offers.map((offer, index) => (
-        <OfferCard
-          key={`${offer.provider}-${offer.tier}`}
-          offer={offer}
-          showBadge={preQualified && index === 0}
-        />
-      ))}
+    <main className="mx-auto max-w-3xl px-6 py-12">
+      <div className="mb-12 text-center">
+        <h1 className="font-display text-4xl font-medium text-brand-stone-900 md:text-5xl">
+          Matched Solar Plans
+        </h1>
+        <p className="mt-4 text-brand-stone-500">
+          Based on your spending, these providers can help you switch to solar today.
+        </p>
+      </div>
+      
+      <div className="flex flex-col gap-6">
+        {offers.map((offer, index) => (
+          <OfferCard
+            key={`${offer.provider}-${offer.tier}`}
+            offer={offer}
+            showBadge={preQualified && index === 0}
+          />
+        ))}
+      </div>
+      
+      <div className="mt-12 text-center">
+        <Link 
+          href="/calculate" 
+          className="text-sm font-medium text-brand-stone-500 underline hover:text-brand-stone-900"
+        >
+          ← Recalculate savings
+        </Link>
+      </div>
     </main>
   );
 }

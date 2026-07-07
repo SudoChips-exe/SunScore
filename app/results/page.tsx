@@ -22,26 +22,40 @@ export default function ResultsPage() {
 
   if (output!.spendTier === "below_threshold") {
     return (
-      <main className="mx-auto flex max-w-md flex-col items-center gap-4 px-6 py-12 text-center">
-        <p className="rounded-2xl border border-orange-200 bg-orange-50 p-4 text-orange-700">
-          Your current spend is below the minimum threshold for a solar PAYGo match.
-        </p>
-        <Link href="/calculate" className="underline">
-          Back to Calculator
-        </Link>
+      <main className="flex min-h-screen flex-col items-center justify-center px-6 py-24 text-center">
+        <div className="max-w-md rounded-3xl border border-brand-stone-200 bg-white p-8 shadow-sm">
+          <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-brand-stone-100 text-2xl">
+            ☀️
+          </div>
+          <h2 className="font-display text-3xl font-medium text-brand-stone-900">
+            Almost there!
+          </h2>
+          <p className="mt-4 text-brand-stone-500 leading-relaxed">
+            Your current fuel and diesel spend is slightly below the minimum threshold for 
+            our current solar PAYGo matches. But don&apos;t worry — as your energy needs grow, 
+            solar becomes an even better investment.
+          </p>
+          <Link 
+            href="/calculate" 
+            className="mt-8 inline-block rounded-full bg-brand-stone-900 px-8 py-3 font-semibold text-white transition hover:bg-brand-stone-800"
+          >
+            Try Different Numbers
+          </Link>
+        </div>
       </main>
     );
   }
 
   return (
-    <main>
+    <main className="flex min-h-screen flex-col items-center justify-center py-12">
       <ComparisonCard inputs={inputs!} output={output!} />
-      <div className="mx-auto max-w-md px-6 pb-12">
+      <div className="mx-auto max-w-2xl px-6 pb-12 w-full flex justify-center">
         <button
           onClick={() => router.push("/offers")}
-          className="w-full rounded-2xl bg-amber-400 px-8 py-3 font-semibold text-neutral-900 shadow transition hover:bg-amber-500"
+          className="group relative w-full max-w-md overflow-hidden rounded-full bg-brand-gold-500 px-8 py-4 font-semibold text-brand-stone-900 transition-all hover:bg-brand-gold-600 hover:shadow-lg active:scale-95"
         >
-          See My Matched Offers
+          <span className="relative z-10">See My Matched Offers</span>
+          <div className="absolute inset-0 -z-10 translate-y-full transition-transform group-hover:translate-y-0 bg-brand-gold-400" />
         </button>
       </div>
     </main>

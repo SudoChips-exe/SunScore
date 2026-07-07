@@ -18,13 +18,13 @@ interface FieldSchema {
 }
 
 const FIELDS: FieldSchema[] = [
-  { name: "dieselSpend", label: "Monthly Diesel Spend (₦)", min: 1, max: 10_000_000 },
+  { name: "dieselSpend", label: "Monthly Fuel/Diesel Spend (₦)", min: 1, max: 10_000_000 },
   { name: "runHours", label: "Daily Run Hours", min: 0.5, max: 24, step: 0.5 },
   { name: "householdSize", label: "Household Size (people)", min: 1, max: 100, integerOnly: true },
   { name: "consistencyMonths", label: "Consistency Months", min: 1, max: 120, integerOnly: true },
   {
     name: "dieselPricePerLitre",
-    label: "Diesel Price per Litre (₦)",
+    label: "Fuel/Diesel Price per Litre (₦)",
     min: 100,
     max: 10_000,
     defaultValue: 1_600,
@@ -80,38 +80,59 @@ export function InputForm() {
 
     const input = parsed as unknown as CalculatorInput;
     const output = calculate(input);
-    setResult(input, output);
+    setResult(input, output.spendTier);
     saveLead(input, output.spendTier);
     router.push("/results");
   }
 
   return (
-    <form onSubmit={handleSubmit} className="mx-auto flex max-w-md flex-col gap-4 px-6 py-12">
-      {FIELDS.map((field) => (
-        <div key={field.name} className="flex flex-col gap-1">
-          <label htmlFor={field.name} className="text-sm font-medium">
-            {field.label}
-          </label>
-          <input
-            id={field.name}
-            name={field.name}
-            type="number"
-            step={field.step ?? (field.integerOnly ? 1 : "any")}
-            value={values[field.name]}
-            onChange={(e) => handleChange(field.name, e.target.value)}
-            className="rounded-xl border border-neutral-300 px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-amber-400"
-          />
-          {errors[field.name] && (
-            <p className="text-sm text-red-500">{errors[field.name]}</p>
-          )}
+    <div className="mx-auto flex min-h-screen max-w-xl flex-col items-center justify-center px-6 py-12">
+      <div className="w-full rounded-3xl border border-brand-stone-200 bg-white p-8 shadow-sm md:p-12">
+        <div className="mb-8 text-center">
+          <h2 className="font-display text-3xl font-medium text-brand-stone-900">
+            Calculate Your Savings
+          </h2>
+          <p className="mt-2 text-brand-stone-500">
+            Enter your current fuel and diesel usage to see your solar potential.
+          </p>
         </div>
-      ))}
-      <button
-        type="submit"
-        className="mt-2 rounded-2xl bg-amber-400 px-8 py-3 font-semibold text-neutral-900 shadow transition hover:bg-amber-500"
-      >
-        Calculate My Savings
-      </button>
-    </form>
+
+        <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+            {FIELDS.map((field) => (
+              <div key={field.name} className={`flex flex-col gap-2 ${field.name === "dieselSpend" ? "sm:col-span-2" : ""}`}>
+                <label htmlFor={field.name} className="text-sm font-medium text-brand-stone-700">
+                  {field.label}
+                </label>
+                <input
+                  id={field.name}
+                  name={field.name}
+                  type="number"
+                  step={field.step ?? (field.integerOnly ? 1 : "any")}
+                  value={values[field.name]}
+                  onChange={(e) => handleChange(field.name, e.target.value)}
+                  className={`rounded-xl border px-4 py-3 transition-all outline-none focus:ring-2 focus:ring-brand-gold-500 ${
+                    errors[field.name] 
+                      ? "border-red-300 bg-red-50 focus:border-red-500 focus:ring-red-200" 
+                      : "border-brand-stone-200 focus:border-brand-gold-500"
+                  }`}
+                />
+                {errors[field.name] && (
+                  <p className="text-xs text-red-500">{errors[field.name]}</p>
+                )}
+              </div>
+            ))}
+          </div>
+
+          <button
+            type="submit"
+            className="group relative mt-4 inline-flex items-center justify-center overflow-hidden rounded-full bg-brand-gold-500 px-8 py-4 font-semibold text-brand-stone-900 transition-all hover:bg-brand-gold-600 hover:shadow-lg active:scale-95"
+          >
+            <span className="relative z-10">See My Savings</span>
+            <div className="absolute inset-0 -z-10 translate-y-full transition-transform group-hover:translate-y-0 bg-brand-gold-400" />
+          </button>
+        </form>
+      </div>
+    </div>
   );
 }

@@ -1,5 +1,6 @@
 import { initializeApp, getApps } from "firebase/app";
 import { getFirestore, collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, type User } from "firebase/auth";
 import type { CalculatorInput, SpendTier } from "@/types";
 
 const REQUIRED_ENV_VARS = [
@@ -31,6 +32,27 @@ const config = getFirebaseConfig();
 const app = config ? (getApps().length === 0 ? initializeApp(config) : getApps()[0]) : null;
 
 export const db = app ? getFirestore(app) : null;
+export const auth = app ? getAuth(app) : null;
+
+const googleProvider = new GoogleAuthProvider();
+
+/**
+ * Opens the Google sign-in popup. Throws so the caller (a button click
+ * handler) can decide how to react — unlike saveLead, this is a
+ * user-initiated action, not a fire-and-forget background write.
+ */
+export async function signInWithGoogle(): Promise<User> {
+  if (!auth) {
+    throw new Error("Firebase is not configured — cannot sign in.");
+  }
+  const result = await signInWithPopup(auth, googleProvider);
+  return result.user;
+}
+
+export async function signOutUser(): Promise<void> {
+  if (!auth) return;
+  await signOut(auth);
+}
 
 /**
  * Writes a lead document to Firestore. Non-blocking: caller does not need

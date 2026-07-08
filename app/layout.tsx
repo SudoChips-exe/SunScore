@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { SunScoreProvider } from "@/context/SunScoreContext";
+import { AuthProvider } from "@/context/AuthContext";
+import { SiteHeader } from "@/components/SiteHeader";
 import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 
@@ -28,7 +30,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${inter.variable} ${playfair.variable} font-sans bg-brand-stone-50 text-brand-stone-900 antialiased`}>
         {/* Grain overlay — the one texture that ties every screen back to the landing page's editorial feel */}
         <div className="pointer-events-none fixed inset-0 z-50 opacity-[0.03] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
-        <SunScoreProvider>{children}</SunScoreProvider>
+        <AuthProvider>
+          <SunScoreProvider>
+            <SiteHeader />
+            {children}
+          </SunScoreProvider>
+        </AuthProvider>
       </body>
     </html>
   );

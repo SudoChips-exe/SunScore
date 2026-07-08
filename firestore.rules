@@ -1,0 +1,20 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Anonymous lead capture from the calculator form — write-only.
+    // The app never reads this collection back.
+    match /leads/{leadId} {
+      allow create: if true;
+      allow read, update, delete: if false;
+    }
+
+    // Each signed-in user's saved calculation history — readable and
+    // writable only by that user.
+    match /users/{userId}/calculations/{calculationId} {
+      allow read, create: if request.auth != null && request.auth.uid == userId;
+      allow update, delete: if false;
+    }
+  }
+}

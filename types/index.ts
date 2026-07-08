@@ -30,3 +30,11 @@ export interface Offer {
   ownershipMonths: number;
   regions: string[];
 }
+
+export interface SavedCalculation {
+  id: string;
+  inputs: CalculatorInput;
+  output: CalculatorOutput;
+  createdAt: number;
+  receiptUrl?: string;
+}

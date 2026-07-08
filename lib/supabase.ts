@@ -1,4 +1,4 @@
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
 const REQUIRED_ENV_VARS = [
   "NEXT_PUBLIC_SUPABASE_URL",
@@ -9,7 +9,8 @@ const REQUIRED_ENV_VARS = [
 function getSupabaseConfig() {
   const missing = REQUIRED_ENV_VARS.filter((key) => !process.env[key]);
   if (missing.length > 0) {
-    throw new Error(`Missing Supabase config: ${missing.join(", ")}`);
+    console.warn(`[SunScore] Missing Supabase config: ${missing.join(", ")}. Storage will be disabled.`);
+    return null;
   }
   return {
     url: process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -18,20 +19,24 @@ function getSupabaseConfig() {
   };
 }
 
-const { url, anonKey, bucket } = getSupabaseConfig();
+const config = getSupabaseConfig();
 
-export const supabase = createClient(url, anonKey);
-export const STORAGE_BUCKET = bucket;
+export const supabase: SupabaseClient | null = config ? createClient(config.url, config.anonKey) : null;
+export const STORAGE_BUCKET = config?.bucket ?? null;
 
 /**
  * Uploads a file to the configured storage bucket under `path`.
- * Used for both static provider assets (uploaded by the team) and any
- * future user-submitted files (e.g. a diesel receipt).
- * Returns the public URL on success, or null if the upload fails
- * (the error is logged; this never throws so callers can treat it as
- * non-blocking, matching the Firestore lead-write behaviour).
+ * Used for both static provider assets (uploaded by the team) and
+ * user-submitted files (e.g. a diesel receipt).
+ * Returns the public URL on success, or null if the upload fails or
+ * Supabase isn't configured — never throws, so callers can treat this
+ * as non-blocking, matching the Firestore lead-write behaviour.
  */
 export async function uploadFile(path: string, file: File | Blob): Promise<string | null> {
+  if (!supabase || !STORAGE_BUCKET) {
+    console.warn("[SunScore] Supabase not initialized. File not uploaded.");
+    return null;
+  }
   const { error } = await supabase.storage.from(STORAGE_BUCKET).upload(path, file, {
     upsert: true,
   });
@@ -42,8 +47,9 @@ export async function uploadFile(path: string, file: File | Blob): Promise<strin
   return getPublicUrl(path);
 }
 
-/** Returns the public URL for a file already in the bucket. */
-export function getPublicUrl(path: string): string {
+/** Returns the public URL for a file already in the bucket, or null if unavailable. */
+export function getPublicUrl(path: string): string | null {
+  if (!supabase || !STORAGE_BUCKET) return null;
   const { data } = supabase.storage.from(STORAGE_BUCKET).getPublicUrl(path);
   return data.publicUrl;
 }

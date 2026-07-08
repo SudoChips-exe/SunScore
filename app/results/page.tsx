@@ -1,15 +1,21 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useSunScore } from "@/context/SunScoreContext";
+import { useAuth } from "@/context/AuthContext";
+import { saveCalculation } from "@/lib/dashboard";
+import { uploadFile } from "@/lib/supabase";
 import { ComparisonCard } from "@/components/ComparisonCard";
 import { AmbientBackground } from "@/components/AmbientBackground";
 
 export default function ResultsPage() {
   const router = useRouter();
   const { inputs, output } = useSunScore();
+  const { user, signIn } = useAuth();
+  const [saving, setSaving] = useState(false);
+  const [receiptFile, setReceiptFile] = useState<File | null>(null);
 
   const isValid = !!(inputs && output && output.estimatedMonthlyPayment !== undefined);
 
@@ -20,6 +26,24 @@ export default function ResultsPage() {
   }, [isValid, router]);
 
   if (!isValid) return null;
+
+  async function handleSaveDashboard() {
+    setSaving(true);
+    try {
+      const currentUser = user ?? (await signIn());
+      let receiptUrl: string | null = null;
+      if (receiptFile) {
+        const path = `receipts/${currentUser.uid}/${Date.now()}-${receiptFile.name}`;
+        receiptUrl = await uploadFile(path, receiptFile);
+      }
+      await saveCalculation(currentUser.uid, inputs!, output!, receiptUrl);
+      router.push("/dashboard");
+    } catch (error) {
+      console.error("[SunScore] Could not save to dashboard:", error);
+    } finally {
+      setSaving(false);
+    }
+  }
 
   if (output!.spendTier === "below_threshold") {
     return (
@@ -52,13 +76,38 @@ export default function ResultsPage() {
     <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden py-12">
       <AmbientBackground tone="green" />
       <ComparisonCard inputs={inputs!} output={output!} />
-      <div className="mx-auto max-w-2xl px-6 pb-12 w-full flex justify-center">
+      <div className="mx-auto flex w-full max-w-2xl flex-col items-center gap-4 px-6 pb-12">
         <button
           onClick={() => router.push("/offers")}
           className="group relative w-full max-w-md overflow-hidden rounded-full bg-brand-gold-500 px-8 py-4 font-semibold text-brand-stone-900 transition-all hover:bg-brand-gold-600 hover:shadow-lg active:scale-95"
         >
           <span className="relative z-10">Unlock My Matched Offers</span>
           <div className="absolute inset-0 -z-10 translate-y-full transition-transform group-hover:translate-y-0 bg-brand-gold-400" />
+        </button>
+        <label className="flex w-full max-w-md cursor-pointer items-center justify-center gap-2 text-sm text-brand-stone-500 transition hover:text-brand-stone-700">
+          <span aria-hidden>📎</span>
+          <span className="truncate">
+            {receiptFile ? receiptFile.name : "Attach a fuel/diesel receipt (optional)"}
+          </span>
+          <input
+            type="file"
+            accept="image/*,.pdf"
+            className="hidden"
+            onChange={(e) => setReceiptFile(e.target.files?.[0] ?? null)}
+          />
+        </label>
+        <button
+          onClick={handleSaveDashboard}
+          disabled={saving}
+          className="w-full max-w-md rounded-full border border-brand-stone-300 bg-white px-8 py-3 text-sm font-semibold text-brand-stone-700 transition hover:border-brand-stone-400 disabled:opacity-60"
+        >
+          {saving
+            ? receiptFile
+              ? "Uploading receipt…"
+              : "Saving…"
+            : user
+              ? "Save to My Dashboard"
+              : "Sign In to Save My Dashboard"}
         </button>
       </div>
     </main>

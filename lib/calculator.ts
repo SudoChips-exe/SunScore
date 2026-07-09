@@ -1,4 +1,5 @@
 import type { CalculatorInput, CalculatorOutput, SpendTier } from "@/types";
+import { computeSunScore } from "@/lib/sunScore";
 
 interface TierConstants {
   monthlyPayment: number;
@@ -41,6 +42,7 @@ export function calculate(input: CalculatorInput): CalculatorOutput {
       monthlySavings: null,
       threeYearSavings: null,
       isPreQualified: preQualified,
+      sunScore: computeSunScore(input, null),
     };
   }
 
@@ -57,5 +59,6 @@ export function calculate(input: CalculatorInput): CalculatorOutput {
     monthlySavings,
     threeYearSavings,
     isPreQualified: preQualified,
+    sunScore: computeSunScore(input, monthlySavings),
   };
 }

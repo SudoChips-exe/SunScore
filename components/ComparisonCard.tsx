@@ -1,5 +1,6 @@
 import type { CalculatorInput, CalculatorOutput } from "@/types";
 import { Naira } from "@/components/Naira";
+import { DIESEL_KG_CO2_PER_LITRE } from "@/lib/sunScore";
 
 interface ComparisonCardProps {
   inputs: CalculatorInput;
@@ -49,6 +50,9 @@ export function ComparisonCard({ inputs, output }: ComparisonCardProps) {
     ownershipMonthsMin,
     ownershipMonthsMax,
   } = output;
+
+  const annualLitresSaved = (inputs.dieselSpend / (inputs.dieselPricePerLitre || 1)) * 12;
+  const annualCO2Saved = Math.round(annualLitresSaved * DIESEL_KG_CO2_PER_LITRE);
 
   return (
     <div className="relative mx-auto flex max-w-2xl flex-col gap-12 px-6 py-12">
@@ -131,10 +135,26 @@ export function ComparisonCard({ inputs, output }: ComparisonCardProps) {
             </span>
           </div>
         </div>
-      </div>
-
-      {/* Long Term Value */}
-      <div className="flex flex-col items-center justify-center rounded-3xl bg-brand-stone-900 p-8 text-center text-white shadow-xl">
+       </div>
+ 
+       {/* Environmental Impact */}
+       <div className="flex flex-col items-center justify-center rounded-3xl border border-brand-green-100 bg-brand-green-50/50 p-8 text-center">
+         <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-full bg-brand-green-100 text-brand-green-600">
+           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v20"/><path d="M17 7H7"/><path d="M17 12H7"/><path d="M17 17H7"/></svg>
+         </div>
+         <span className="text-sm font-medium uppercase tracking-widest text-brand-green-600">
+           Annual Environmental Impact
+         </span>
+         <div className="mt-4 font-display text-4xl font-medium text-brand-stone-900">
+           {annualCO2Saved.toLocaleString()} <span className="text-xl font-normal text-brand-stone-500">kg CO<sub>2</sub></span>
+         </div>
+         <p className="mt-2 text-sm text-brand-stone-500">
+           You&apos;ll keep this much carbon out of the air every single year.
+         </p>
+       </div>
+ 
+       {/* Long Term Value */}
+       <div className="flex flex-col items-center justify-center rounded-3xl bg-brand-stone-900 p-8 text-center text-white shadow-xl">
         <span className="text-sm font-medium uppercase tracking-widest text-brand-stone-400">
           3-Year Cumulative Savings
         </span>

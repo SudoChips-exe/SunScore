@@ -13,6 +13,28 @@ export interface CalculatorInput {
   dieselPricePerLitre: number;
 }
 
+export type SunScoreBand =
+  | "not_yet_ready"
+  | "emerging"
+  | "qualified"
+  | "strong"
+  | "excellent";
+
+export interface SunScoreFactor {
+  key: string;
+  label: string;
+  points: number;
+  maxPoints: number;
+  detail: string;
+}
+
+export interface SunScoreResult {
+  score: number;
+  band: SunScoreBand;
+  bandLabel: string;
+  factors: SunScoreFactor[];
+}
+
 export interface CalculatorOutput {
   spendTier: SpendTier;
   estimatedMonthlyPayment: number | null;
@@ -21,6 +43,7 @@ export interface CalculatorOutput {
   monthlySavings: number | null;
   threeYearSavings: number | null;
   isPreQualified: boolean;
+  sunScore: SunScoreResult;
 }
 
 export interface Offer {

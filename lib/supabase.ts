@@ -1,21 +1,28 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
-const REQUIRED_ENV_VARS = [
-  "NEXT_PUBLIC_SUPABASE_URL",
-  "NEXT_PUBLIC_SUPABASE_ANON_KEY",
-  "NEXT_PUBLIC_SUPABASE_STORAGE_BUCKET",
-] as const;
-
 function getSupabaseConfig() {
-  const missing = REQUIRED_ENV_VARS.filter((key) => !process.env[key]);
+  // Static, literal process.env.EXACT_NAME references only — see the
+  // matching comment in lib/firebase.ts for why dynamic key access breaks
+  // env inlining in the browser bundle.
+  const raw = {
+    NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
+    NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    NEXT_PUBLIC_SUPABASE_STORAGE_BUCKET: process.env.NEXT_PUBLIC_SUPABASE_STORAGE_BUCKET,
+  };
+
+  const missing = Object.entries(raw)
+    .filter(([, value]) => !value)
+    .map(([key]) => key);
+
   if (missing.length > 0) {
     console.warn(`[SunScore] Missing Supabase config: ${missing.join(", ")}. Storage will be disabled.`);
     return null;
   }
+
   return {
-    url: process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    anonKey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    bucket: process.env.NEXT_PUBLIC_SUPABASE_STORAGE_BUCKET!,
+    url: raw.NEXT_PUBLIC_SUPABASE_URL!,
+    anonKey: raw.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    bucket: raw.NEXT_PUBLIC_SUPABASE_STORAGE_BUCKET!,
   };
 }
 

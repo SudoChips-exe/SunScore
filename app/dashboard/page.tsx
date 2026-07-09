@@ -8,6 +8,7 @@ import { useSunScore } from "@/context/SunScoreContext";
 import { getUserCalculations } from "@/lib/dashboard";
 import { AmbientBackground } from "@/components/AmbientBackground";
 import { Naira } from "@/components/Naira";
+import { DIESEL_KG_CO2_PER_LITRE } from "@/lib/sunScore";
 import type { SavedCalculation } from "@/types";
 
 const TIER_LABEL: Record<string, string> = {
@@ -27,6 +28,11 @@ export default function DashboardPage() {
   const { setResult } = useSunScore();
   const [calculations, setCalculations] = useState<SavedCalculation[] | null>(null);
   const [signingIn, setSigningIn] = useState(false);
+
+  const totalCO2Avoided = calculations?.reduce((sum, calc) => {
+    const annualLitres = (calc.inputs.dieselSpend / (calc.inputs.dieselPricePerLitre || 1)) * 12;
+    return sum + (annualLitres * DIESEL_KG_CO2_PER_LITRE);
+  }, 0) || 0;
 
   useEffect(() => {
     if (!user) return;
@@ -83,6 +89,20 @@ export default function DashboardPage() {
           <p className="mt-4 text-brand-stone-500">Every calculation you&apos;ve saved, in one place.</p>
         </div>
 
+        {calculations !== null && calculations.length > 0 && (
+          <div className="mb-12 rounded-3xl border-2 border-brand-green-100 bg-brand-green-50 p-8 text-center shadow-sm">
+            <span className="text-xs font-semibold uppercase tracking-widest text-brand-green-600">
+              Cumulative Environmental Impact
+            </span>
+            <div className="mt-2 font-display text-5xl font-bold text-brand-stone-900">
+              {Math.round(totalCO2Avoided).toLocaleString()} <span className="text-2xl font-normal text-brand-stone-500">kg CO<sub>2</sub></span>
+            </div>
+            <p className="mt-2 text-sm text-brand-green-700">
+              Total potential carbon avoided across all your identified solar opportunities.
+            </p>
+          </div>
+        )}
+
         {calculations === null && (
           <p className="text-center text-brand-stone-400">Loading your saved calculations…</p>
         )}
@@ -112,6 +132,9 @@ export default function DashboardPage() {
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-wider text-brand-stone-400">
                     {formatDate(calc.createdAt)} · {TIER_LABEL[calc.output.spendTier] ?? calc.output.spendTier}
+                    {calc.output.sunScore && (
+                      <> · SunScore {calc.output.sunScore.score} ({calc.output.sunScore.bandLabel})</>
+                    )}
                   </p>
                   <p className="mt-1 font-display text-2xl font-medium text-brand-green-600">
                     <Naira />

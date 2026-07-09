@@ -3,28 +3,36 @@ import { getFirestore, collection, addDoc, serverTimestamp } from "firebase/fire
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, type User } from "firebase/auth";
 import type { CalculatorInput, SpendTier } from "@/types";
 
-const REQUIRED_ENV_VARS = [
-  "NEXT_PUBLIC_FIREBASE_API_KEY",
-  "NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN",
-  "NEXT_PUBLIC_FIREBASE_PROJECT_ID",
-  "NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET",
-  "NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID",
-  "NEXT_PUBLIC_FIREBASE_APP_ID",
-] as const;
-
 function getFirebaseConfig() {
-  const missing = REQUIRED_ENV_VARS.filter((key) => !process.env[key]);
+  // Next.js can only inline NEXT_PUBLIC_* vars into the browser bundle when
+  // each one is referenced as a static, literal `process.env.EXACT_NAME`.
+  // Looping over a list with dynamic `process.env[key]` access defeats that
+  // static analysis — every lookup silently resolves to `undefined` client-side.
+  const raw = {
+    NEXT_PUBLIC_FIREBASE_API_KEY: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+    NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+    NEXT_PUBLIC_FIREBASE_PROJECT_ID: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+    NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+    NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+    NEXT_PUBLIC_FIREBASE_APP_ID: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  };
+
+  const missing = Object.entries(raw)
+    .filter(([, value]) => !value)
+    .map(([key]) => key);
+
   if (missing.length > 0) {
     console.warn(`[SunScore] Missing Firebase config: ${missing.join(", ")}. Firebase services will be disabled.`);
     return null;
   }
+
   return {
-    apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY!,
-    authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN!,
-    projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID!,
-    storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET!,
-    messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID!,
-    appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID!,
+    apiKey: raw.NEXT_PUBLIC_FIREBASE_API_KEY!,
+    authDomain: raw.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN!,
+    projectId: raw.NEXT_PUBLIC_FIREBASE_PROJECT_ID!,
+    storageBucket: raw.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET!,
+    messagingSenderId: raw.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID!,
+    appId: raw.NEXT_PUBLIC_FIREBASE_APP_ID!,
   };
 }
 

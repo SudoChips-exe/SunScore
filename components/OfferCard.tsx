@@ -1,5 +1,7 @@
 import type { Offer } from "@/types";
 import { Naira } from "@/components/Naira";
+import { useSunScore } from "@/context/SunScoreContext";
+import { DIESEL_KG_CO2_PER_LITRE } from "@/lib/sunScore";
 
 interface OfferCardProps {
   offer: Offer;
@@ -15,7 +17,13 @@ const PROVIDER_ACCENT: Record<Offer["provider"], { bar: string; chip: string; te
 };
 
 export function OfferCard({ offer, showBadge }: OfferCardProps) {
+  const { inputs } = useSunScore();
   const accent = PROVIDER_ACCENT[offer.provider];
+
+  const annualCO2Saved = inputs 
+    ? Math.round((inputs.dieselSpend / (inputs.dieselPricePerLitre || 1)) * 12 * DIESEL_KG_CO2_PER_LITRE)
+    : 0;
+
   const contactHref = `mailto:hello@sunscore.ng?subject=${encodeURIComponent(
     `Interested in the ${offer.provider} plan`
   )}&body=${encodeURIComponent(
@@ -56,19 +64,27 @@ export function OfferCard({ offer, showBadge }: OfferCardProps) {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 py-4 border-y border-brand-stone-100">
-        <div>
-          <p className="text-[10px] font-semibold uppercase tracking-wider text-brand-stone-400">Ownership</p>
-          <p className="text-sm font-medium text-brand-stone-700">{offer.ownershipMonths} months</p>
-        </div>
-        <div>
-          <p className="text-[10px] font-semibold uppercase tracking-wider text-brand-stone-400">Available In</p>
-          <p className="text-sm font-medium text-brand-stone-700">{offer.regions.join(", ")}</p>
-        </div>
-      </div>
+       <div className="grid grid-cols-2 gap-4 py-4 border-y border-brand-stone-100">
+         <div>
+           <p className="text-[10px] font-semibold uppercase tracking-wider text-brand-stone-400">Ownership</p>
+           <p className="text-sm font-medium text-brand-stone-700">{offer.ownershipMonths} months</p>
+         </div>
+         <div>
+           <p className="text-[10px] font-semibold uppercase tracking-wider text-brand-stone-400">Available In</p>
+           <p className="text-sm font-medium text-brand-stone-700">{offer.regions.join(", ")}</p>
+         </div>
+       </div>
 
-      <a
-        href={contactHref}
+       <div className="flex items-center justify-between py-2 px-1">
+         <div className="flex items-center gap-2 text-brand-green-600">
+           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v20"/><path d="M17 7H7"/><path d="M17 12H7"/><path d="M17 17H7"/></svg>
+           <span className="text-xs font-medium">Displaces {annualCO2Saved.toLocaleString()}kg CO<sub>2</sub>/year</span>
+         </div>
+         <span className="text-[10px] text-brand-stone-400 italic">Eco-Impact</span>
+       </div>
+
+       <a
+         href={contactHref}
         className={`w-full rounded-full py-3 text-center text-sm font-semibold transition-all ${
           showBadge
             ? "bg-brand-green-600 text-white hover:bg-brand-green-700"

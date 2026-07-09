@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Naira } from "@/components/Naira";
+import { DIESEL_KG_CO2_PER_LITRE } from "@/lib/sunScore";
 
 export default function LandingPage() {
   return (
@@ -27,7 +28,7 @@ export default function LandingPage() {
             </h1>
 
             <p className="text-xl md:text-2xl text-brand-stone-600 max-w-2xl leading-relaxed mb-12 font-light">
-              You&apos;ve been financing a solar system for years—you just paid the fuel and diesel companies instead. <span className="font-medium text-brand-stone-900">Stop the leak.</span>
+              You&apos;ve been financing a solar system for years you just paid the fuel and diesel companies instead. <span className="font-medium text-brand-stone-900">Stop the leak.</span>
             </p>
 
             <div className="flex flex-col sm:flex-row gap-6 items-start">
@@ -104,6 +105,50 @@ export default function LandingPage() {
 
         </div>
       </div>
+
+      {/* Impact Evidence Section */}
+      <section className="relative z-10 mx-auto max-w-7xl px-6 py-20 lg:py-32 border-t border-brand-stone-200">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+          <div className="lg:col-span-5">
+            <h2 className="font-display text-4xl md:text-6xl leading-tight tracking-tighter text-brand-stone-900 mb-6">
+              The <span className="italic text-brand-gold-600">hidden tax</span> on Nigerian progress.
+            </h2>
+            <p className="text-lg text-brand-stone-600 leading-relaxed mb-8">
+              Diesel dependency isn&apos;t just an inconvenience it&apos;s a systemic economic leak. Millions of households are locked into a cycle of rising fuel costs and environmental degradation.
+            </p>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-stone-100 text-brand-stone-500 text-xs font-medium">
+              Data sourced from NBS &amp; World Bank reports
+            </div>
+          </div>
+
+          <div className="lg:col-span-7 grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="p-8 rounded-3xl bg-white border border-brand-stone-200 shadow-sm hover:shadow-md transition-shadow group">
+              <div className="text-brand-gold-600 mb-4 group-hover:scale-110 transition-transform inline-block">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              </div>
+              <div className="text-4xl font-display font-bold text-brand-stone-900 mb-2">22M+</div>
+              <p className="text-sm text-brand-stone-500 leading-snug">Generators currently powering Nigerian homes &amp; businesses</p>
+            </div>
+
+            <div className="p-8 rounded-3xl bg-white border border-brand-stone-200 shadow-sm hover:shadow-md transition-shadow group">
+              <div className="text-brand-gold-600 mb-4 group-hover:scale-110 transition-transform inline-block">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              </div>
+              <div className="text-4xl font-display font-bold text-brand-stone-900 mb-2">$14B</div>
+              <p className="text-sm text-brand-stone-500 leading-snug">Spent annually on fuel across the country</p>
+            </div>
+
+            <div className="p-8 rounded-3xl bg-white border border-brand-stone-200 shadow-sm hover:shadow-md transition-shadow group">
+              <div className="text-brand-gold-600 mb-4 group-hover:scale-110 transition-transform inline-block">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v20"/><path d="M2 12h20"/><path d="M12 12l-4-4"/><path d="M12 12l4 4"/></svg>
+              </div>
+              <div className="text-4xl font-display font-bold text-brand-stone-900 mb-2">{DIESEL_KG_CO2_PER_LITRE}kg</div>
+              <p className="text-sm text-brand-stone-500 leading-snug">CO<sub>2</sub> emitted per liter of diesel fuel burned</p>
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
+
   );
 }

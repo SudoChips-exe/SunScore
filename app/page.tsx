@@ -1,10 +1,21 @@
 import Link from "next/link";
 import { Naira } from "@/components/Naira";
 import { DIESEL_KG_CO2_PER_LITRE } from "@/lib/sunScore";
+import { Problem } from "@/components/Problem";
+import { Process } from "@/components/Process";
+import { Comparison } from "@/components/Comparison";
+import { Features } from "@/components/Features";
+import { Stats } from "@/components/Stats";
+import { Testimonials } from "@/components/Testimonials";
+import { CTASection } from "@/components/CTASection";
+import { FAQ } from "@/components/FAQ";
+import { Footer } from "@/components/Footer";
+import { ScrollToStoredTarget } from "@/components/ScrollToStoredTarget";
 
 export default function LandingPage() {
   return (
     <main className="relative min-h-screen w-full bg-brand-stone-50 overflow-x-hidden">
+      <ScrollToStoredTarget />
       {/* Background Architectural Elements */}
       <div className="absolute top-0 right-0 w-1/3 h-full bg-brand-gold-50/50 -skew-x-12 translate-x-20" />
       <div className="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-brand-gold-100/40 blur-3xl" />
@@ -148,7 +159,16 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
-    </main>
 
+      <Problem />
+      <Process />
+      <Comparison />
+      <Features />
+      <Stats />
+      <Testimonials />
+      <CTASection />
+      <FAQ />
+      <Footer />
+    </main>
   );
 }

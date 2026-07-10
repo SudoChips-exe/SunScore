@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
+import { ScrollNavButton } from "@/components/ScrollNavButton";
 
 function GoogleIcon() {
   return (
@@ -32,9 +33,22 @@ export function SiteHeader() {
 
   return (
     <header className="relative z-30 flex items-center justify-between px-6 py-5 md:px-10">
-      <Link href="/" className="font-display text-xl font-medium text-brand-stone-900">
-        SunScore
+      <Link href="/" className="flex items-center">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/favicon.svg" alt="SunScore" className="h-11 w-auto" />
       </Link>
+
+      <div className="hidden items-center gap-8 md:flex">
+        <ScrollNavButton targetId="process" className="text-sm font-medium text-brand-stone-600 transition hover:text-brand-stone-900">
+          How it works
+        </ScrollNavButton>
+        <Link href="/calculate" className="text-sm font-medium text-brand-stone-600 transition hover:text-brand-stone-900">
+          Savings
+        </Link>
+        <ScrollNavButton targetId="comparison" className="text-sm font-medium text-brand-stone-600 transition hover:text-brand-stone-900">
+          Compare
+        </ScrollNavButton>
+      </div>
 
       <div className="flex items-center gap-4">
         {loading ? null : user ? (

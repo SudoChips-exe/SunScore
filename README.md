@@ -1,19 +1,19 @@
 # SunScore
 
-> "You've been affording solar this whole time — you just didn't know it."
+> "You've been affording solar this whole time  you just didn't know it."
 
-SunScore is a web app for Nigerian households and small businesses that helps them see — at a glance — that their existing diesel/generator spend already covers the cost of an equivalent solar PAYGo plan. Enter what you already spend on diesel, get a personalised savings comparison, an ownership timeline, and matched offers from real solar PAYGo providers.
+SunScore is a web app for Nigerian households and small businesses that helps them see  at a glance  that their existing diesel/generator spend already covers the cost of an equivalent solar PAYGo plan. Enter what you already spend on diesel, get a personalised savings comparison, an ownership timeline, and matched offers from real solar PAYGo providers.
 
 ---
 
 ## Features
 
-- **Savings Calculator** — enter monthly diesel spend, run hours, household size, and consistency months to see your potential monthly and 3-year savings
-- **Spend Tier Classification** — automatically categorised into Starter, Standard, Power, or Business tiers
-- **Ownership Timeline** — see exactly which month your solar system would be paid off and payments drop to ₦0
-- **Pre-Qualification** — users with ≥ ₦20,000/month spend sustained over ≥ 3 months receive a Pre-Qualified badge
-- **Matched Offers** — filtered, sorted solar PAYGo offers from Lumos, Arnergy, and d.light matched to your tier
-- **Lead Capture** — form submissions are written to Firebase Firestore as a write-only lead store (never blocks navigation)
+- **Savings Calculator**: enter monthly diesel spend, run hours, household size, and consistency months to see your potential monthly and 3-year savings
+- **Spend Tier Classification**: automatically categorised into Starter, Standard, Power, or Business tiers
+- **Ownership Timeline**: see exactly which month your solar system would be paid off and payments drop to ₦0
+- **Pre-Qualification**: users with ≥ ₦20,000/month spend sustained over ≥ 3 months receive a Pre-Qualified badge
+- **Matched Offers**: filtered, sorted solar PAYGo offers from Lumos, Arnergy, and d.light matched to your tier
+- **Lead Capture**: form submissions are written to Firebase Firestore as a write-only lead store (never blocks navigation)
 
 ---
 
